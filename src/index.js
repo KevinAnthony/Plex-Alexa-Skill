@@ -1,5 +1,6 @@
 'use strict';
 var Alexa = require('alexa-sdk');
+var Plex = require("plex-api");
 var APP_ID = undefined;
 
 exports.handler = function(event, context, callback) {
@@ -24,7 +25,12 @@ var handlers = {
         this.emit('Stop');
     },
     'Play': function () {
-        this.emit(':tell', 'Reached Play Funtion')
+        var client = new Plex("174.44.128.87");
+        client.query("/").then(function (result) {
+            this.emit(':tell', result.friendlyName + " running Plex Media Server Version " + result.version
+        }, function (err) {
+            this.emit(':tell', "Could not connect to server " + err);
+        });
     },
     'Pause': function () {
         this.emit(':tell', 'Reached Pause Funtion')
